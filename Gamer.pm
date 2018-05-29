@@ -21,9 +21,14 @@ sub new
   bless($self,$class);
 }
 
-sub myname
+sub nick
 {
   my $this = shift;
+  my $nick = shift;
+  if($nick)
+  {
+    $this->{nick} = $nick;
+  }
 
   return $this->{nick};
 }
@@ -36,4 +41,20 @@ sub get_card
   push(@{$this->{cards}}, $card);
 }
 
+sub under_attack
+{
+  my $this = shift;
+
+  return $this->{guard} ? 1 : 0;
+}
+
+sub attack
+{
+
+}
+
+sub guard
+{
+
+}
 1;

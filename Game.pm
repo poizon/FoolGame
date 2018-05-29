@@ -33,6 +33,8 @@ sub give_out
   my $this = shift;
   # к раздаче по 6 штук на каждого игрока
   my @distrib = splice(@{$this->{deck}},0,scalar @{$this->{gamers}}*6);
+  # определяем козырь
+  $this->trump($this->{deck}->[0]);
   # раздаем карты игрокам
   while(@distrib)
   {
@@ -50,6 +52,49 @@ sub add
   my $this = shift;
   my $gamer = shift;
   push(@{$this->{gamers}}, $gamer);
+}
+
+=head2
+
+определение конца игры. Если в колоде нет карт а игрок остался 1,
+то все...
+
+=cut
+sub end
+{
+  my $this = shift;
+
+  if (scalar @{$this->{deck}} and scalar @{$this->{gamers}} > 1 )
+  {
+    return 0;
+  }
+
+  return 1;
+
+}
+
+=head2
+
+Здесь по идее можно следать так:
+определяем какая буква в козыре и все карты в колоде с этой буквой меняем на x0F,
+чтобы они были самыми старшими
+
+=cut
+sub trump
+{
+  my $this = shift;
+  my $trump = shift;
+
+  if($trump)
+  {
+    #TODO!
+    $trump = hex $trump; say $trump; say hex(0xD9);
+    $this->{trump} = $trump <= hex(0xA9) ? 'A' :
+                     $trump <= hex(0xB9) ? 'B' :
+                     $trump <= hex(0xC9) ? 'C' : 'D';
+  }
+
+  return $this->{trump};
 }
 
 1;
