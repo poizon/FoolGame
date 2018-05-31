@@ -87,11 +87,10 @@ sub trump
 
   if($trump)
   {
-    #TODO!
-    $trump = hex $trump; say $trump; say hex(0xD9);
-    $this->{trump} = $trump <= hex(0xA9) ? 'A' :
-                     $trump <= hex(0xB9) ? 'B' :
-                     $trump <= hex(0xC9) ? 'C' : 'D';
+    $trump = oct $trump;
+    $this->{trump} = $trump <= oct '0xA9' ? 'A' :
+                     $trump <= oct '0xB9' ? 'B' :
+                     $trump <= oct '0xC9' ? 'C' : 'D';
   }
 
   return $this->{trump};
