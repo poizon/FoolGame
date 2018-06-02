@@ -35,11 +35,11 @@ while(!$game->end)
     # если игрок под атакой - защищаемся, в противном случае атакуем
     if($gamer->under_attack)
     {
-      $gamer->guard;
+      $game->guard($gamer);
     }
     else
     {
-      $gamer->attack;
+      $game->attack($gamer);
     }
   }
 }

@@ -11,12 +11,20 @@ sub new
   my $class = shift;
 
   my $self = {
+    # колода
     deck => [qw/0xA1 0xA2 0xA3 0xA4 0xA5 0xA6 0xA7 0xA8 0xA9
                 0xB1 0xB2 0xB3 0xB4 0xB5 0xB6 0xB7 0xB8 0xB9
                 0xC1 0xC2 0xC3 0xC4 0xC5 0xC6 0xC7 0xC8 0xC9
                 0xD1 0xD2 0xD3 0xD4 0xD5 0xD6 0xD7 0xD8 0xD9/],
+    # козырь
     trump => undef,
+    # игроки
     gamers => [],
+    # стол с картами
+    desktop => {
+      beat => [],# побитые карты
+      active => [],# не побитые карты
+      },
   };
 
   bless($self,$class);
@@ -94,6 +102,53 @@ sub trump
   }
 
   return $this->{trump};
+}
+
+=head2 guard(gamer)
+
+защита игрока
+
+=cut
+sub guard
+{
+  my $this = shift;
+  my $gamer = shift;
+  # Проверяем есть ли не побитые карты на столе (desktop)
+  return if $this->all_beat;
+  # ищем возможные комбинации для карт на столе которые нужно побить
+  # находим все комбинации, выбираем лучшие
+  # бьем, перемещаем из active в beat
+  return;
+}
+
+=head2 all_beat()
+
+Проверяет все ли побиты карты на столе, если все - то возвращает true
+
+=cut
+sub all_beat
+{
+  my $this = shift;
+  # если в массиве с активными картами нет элементов
+  # значит все побили
+  return scalar $this->{desktop}->{active} ? 0 : 1;
+}
+
+=head2 attack()
+
+атака игрока
+
+=cut
+sub attack
+{
+  my $this = shift;
+  my $gamer = shift;
+  # если не все побиты - ждем когда будут все побиты ?
+  return if ! $this->all_beat;
+  # подбираем что можно подбросить
+  # Отбираем лучшую комбинацию
+  # помещаем в active
+  return;
 }
 
 1;
