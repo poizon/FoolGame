@@ -118,6 +118,32 @@ sub guard
   # ищем возможные комбинации для карт на столе которые нужно побить
   # находим все комбинации, выбираем лучшие
   # бьем, перемещаем из active в beat
+  @{$gamer->{cards}} = sort @{$gamer->{cards}};
+  my $can_beat = 0;
+  for (my $i=0; $i <= scalar @{$this->{desktop}->{active}}; $i++)
+  {
+    # не могу побить
+    $can_beat = 0;
+    for my $card(@{$gamer->{cards}})
+    {
+      # если можем побить
+      if(oct $card > oct $this->{desktop}->{active}[$i])
+      {
+        # say "card: $card on desk: $desk_card";
+        my $card = splice(@{$this->{desktop}->{active}},$i,1);
+        push(@{$this->{desktop}->{beat}}, $card);
+        # могу побить
+        $can_beat = 1;
+        last;# выходим из этого цикла for во внешний for
+      }
+    }
+  }
+  #
+  # здесь проверяем осталось ли что не побитое, если осталось
+  # прогоняем уже с поиском по козыврям
+  say "Can beat? $can_beat";
+  # если и с козырями побить не можем - весь desktop->{active} и desktop->{beat}
+  # забираем к игроку
   return;
 }
 
@@ -131,7 +157,7 @@ sub all_beat
   my $this = shift;
   # если в массиве с активными картами нет элементов
   # значит все побили
-  return scalar $this->{desktop}->{active} ? 0 : 1;
+  return scalar @{$this->{desktop}->{active}} ? 0 : 1;
 }
 
 =head2 attack()
@@ -145,6 +171,19 @@ sub attack
   my $gamer = shift;
   # если не все побиты - ждем когда будут все побиты ?
   return if ! $this->all_beat;
+  # если есть карты на столе - подбираем из того что есть
+  if (@{$this->{desktop}->{beat}})
+  {
+    say "Beat:";
+    p $this->{desktop}->{beat};
+  }
+  # если нет, то берем наименьшую карту
+  else
+  {
+    @{$gamer->{cards}} = sort @{$gamer->{cards}};
+    my $card = shift @{$gamer->{cards}};
+    push( @{$this->{desktop}->{active}}, $card);
+  }
   # подбираем что можно подбросить
   # Отбираем лучшую комбинацию
   # помещаем в active

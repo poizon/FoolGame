@@ -33,7 +33,11 @@ sub nick
   return $this->{nick};
 }
 
+=head2
 
+Взять карту
+
+=cut
 sub get_card
 {
   my $this = shift;
@@ -57,4 +61,12 @@ sub guard
 {
 
 }
+
+sub set_guard
+{
+  my $this = shift;
+  $this->{guard} = 1;
+  return;
+}
+
 1;

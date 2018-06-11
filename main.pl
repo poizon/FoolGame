@@ -20,13 +20,12 @@ my $gamer2 = Gamer->new;
 $game->add($gamer2);
 
 my $gamer3 = Gamer->new;
+$gamer3->set_guard;
 $game->add($gamer3);
 
 # раздать карты
 $game->give_out();
 
-p $game->trump;
-exit;
 # начали играть до конца
 while(!$game->end)
 {
@@ -42,4 +41,18 @@ while(!$game->end)
       $game->attack($gamer);
     }
   }
+  # добрать из колоды карты до нужного кол-ва
+  for my $gamer(@{$game->{gamers}})
+  {
+    sleep 1;
+    # say scalar @{$gamer->{cards}};
+    # если карт уже больше или = 6-ти пропускаем
+    next if @{$gamer->{cards}} >= 6;
+    my $card = shift @{$game->{deck}};
+    $gamer->get_card($card);
+  }
+
+say "Last:";
+p $game->{deck};
+
 }
