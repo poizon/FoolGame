@@ -20,7 +20,7 @@ my $gamer2 = Gamer->new;
 $game->add($gamer2);
 
 my $gamer3 = Gamer->new;
-$gamer3->set_guard;
+$gamer3->guard(1);
 $game->add($gamer3);
 
 # раздать карты
@@ -29,6 +29,7 @@ $game->give_out();
 # начали играть до конца
 while(!$game->end)
 {
+
   for my $gamer(@{$game->{gamers}})
   {
     # если игрок под атакой - защищаемся, в противном случае атакуем
@@ -38,13 +39,21 @@ while(!$game->end)
     }
     else
     {
+      #
       $game->attack($gamer);
     }
   }
+
+  # если за ход были все побиты, то нужно переставить id игрока под ударом
+  # т.е. все побиты
+  $game->set_next if $game->all_beat;
+
   # добрать из колоды карты до нужного кол-ва
   for my $gamer(@{$game->{gamers}})
   {
     sleep 1;
+    # say "Cards:";
+    # p $gamer->{cards};
     # say scalar @{$gamer->{cards}};
     # если карт уже больше или = 6-ти пропускаем
     next if @{$gamer->{cards}} >= 6;

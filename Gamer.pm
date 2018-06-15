@@ -52,20 +52,19 @@ sub under_attack
   return $this->{guard} ? 1 : 0;
 }
 
-sub attack
-{
+# геттер для id
+sub get_id { shift->{id} }
 
-}
+=head2 set_guard(1/0)
 
+сеттер для св-ва guard у игрока!
+
+=cut
 sub guard
 {
-
-}
-
-sub set_guard
-{
   my $this = shift;
-  $this->{guard} = 1;
+  my $guard = shift;
+  $this->{guard} = $guard;
   return;
 }
 

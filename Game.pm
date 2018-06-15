@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use feature 'say';
 use List::Util qw(shuffle);
+use Carp;
 use DDP;
 
 sub new
@@ -120,6 +121,7 @@ sub guard
   # бьем, перемещаем из active в beat
   @{$gamer->{cards}} = sort @{$gamer->{cards}};
   my $can_beat = 0;
+  # ищем комбинации
   for (my $i=0; $i <= scalar @{$this->{desktop}->{active}}; $i++)
   {
     # не могу побить
@@ -188,6 +190,49 @@ sub attack
   # Отбираем лучшую комбинацию
   # помещаем в active
   return;
+}
+
+
+=head2 set_next()
+
+проставляем следующего по id игрока под удар
+с остальных снимаем
+
+=cut
+sub set_next
+{
+  my $this = shift;
+  my $gamer_under_attack_id;
+  # сортируем по id
+  for my $gamer(sort {$a->{id} <=> $b->{id}} @{$this->{gamers}})
+  {
+    # если игрок под атакой
+    if($gamer->under_attack)
+    {
+      # запоминаем id
+      $gamer_under_attack_id = $gamer->get_id;
+      # сбрасываем под атакой
+      $gamer->guard(0);
+      # если это последний игрок в массиве, то нужно поставить атаку первому
+      # и вернутся
+      if($this->{gamers}->[-1]->{id} == $gamer_under_attack_id)
+      {
+        $this->{gamers}->[0]->guard(1);
+        return $this->{gamers}->[0]->get_id;
+      }
+    }
+    # есть уже id игрока бывшего под атакой
+    elsif($gamer_under_attack_id)
+    {
+      # ставим следующему
+      $gamer->guard(1);
+      # и возвращаем id
+      return $gamer->get_id;
+    }
+
+  }
+
+  croak "Error in set_next method!";
 }
 
 1;
